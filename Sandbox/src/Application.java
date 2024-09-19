@@ -44,7 +44,7 @@ public class Application implements Runnable {
 
     public void Hangman() {
         //adds pieces of the hangman to an array and then extracts based on the amount of wrong answers.
-        // i am aware this is really unnecessary but i have  never worked with runnable list so yea.
+        // I am aware this is really unnecessary, but I have  never worked with runnable list so yea.
         List<Runnable> DrawingHangman = new ArrayList<>();
         DrawingHangman.add(() -> SaxionApp.drawLine(100, 600, 300, 600));   // base
         DrawingHangman.add(() -> SaxionApp.drawLine(200, 600, 200, 200));   // vertical pole
