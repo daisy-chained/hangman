@@ -9,6 +9,8 @@ public class Application implements Runnable {
     public int wrongAnswers = 0;
     public String word;
     public boolean[] marker = new boolean[99];
+    public String guesses = "";
+
     public static void main(String[] args) {
         SaxionApp.start(new Application(), 1024, 768);
 
@@ -18,21 +20,25 @@ public class Application implements Runnable {
         Boolean gameOver = false;
 
 
-        SaxionApp.print("please enter a 4 letter word you want to use: ");
+        SaxionApp.print("please enter the word you want to use: ");
         word = SaxionApp.readString();
-
-        for (int i = 0; i < word.length(); i++) {
-
-        }
+        word = word.toUpperCase();
         textLines();
         draw();
         while (!gameOver) {
 
-            SaxionApp.print("Whats your Guess?:");
-            String guess = SaxionApp.readString();
-            gameOver = wincon(guess);
-            if(wrongAnswers >= 12){gameOver = true;}
-            draw();
+            SaxionApp.printLine("Whats your Guess?:");
+            String guess = String.valueOf(SaxionApp.readChar());
+            guess = guess.toUpperCase();
+            if (!guesses.contains(guess)) {
+                guesses = guesses + guess;
+                gameOver = wincon(guess);
+                if (wrongAnswers >= 11) {
+                    gameOver = true;
+                }
+                draw();
+            } else SaxionApp.printLine("You guessed this already");
+
         }
         if (counter == word.length()) {
             SaxionApp.print("You won!");
@@ -73,7 +79,14 @@ public class Application implements Runnable {
 
     public Boolean wincon(String guess) {
         if (word.contains(guess)) {
-            counter++;SaxionApp.printLine(counter);marker[word.indexOf(guess)] = true;
+            for (int i = 0; i < word.length(); i++) {
+                if (String.valueOf(word.charAt(i)).equals(guess)) {
+                    marker[i] = true;
+                    SaxionApp.print(word.indexOf(i));
+                    counter++;
+                }
+            }
+
         } else {
             wrongAnswers++;
         }
@@ -81,21 +94,25 @@ public class Application implements Runnable {
     }
 
     public void draw() {
-
+        SaxionApp.clear();
         Hangman();
         textLines();
         drawLetters();
+        previousGuesses();
     }
 
     public void drawLetters() {
-        int letterCount = 0;
         for (int i = 0; i < word.length(); i++) {
-            if(marker[i]) {
-        SaxionApp.drawText(""+word.charAt(i),487+(i*25+25),580,20);}
+            if (marker[i]) {
+                SaxionApp.drawText("" + word.charAt(i), 487 + (i * 25 + 25), 580, 20);
+            }
         }
         //SaxionApp.drawLine(500+(letterCount*25+25), 600,510+(letterCount*25),600);
     }
 
+    public void previousGuesses() {
+        SaxionApp.drawText("previous Guesses", 600, 70, 30);
+        SaxionApp.drawText(guesses, 600, 100, 30);
+    }
 }
-//todo make repeated letters work
-//todo make guesses only work once
+
